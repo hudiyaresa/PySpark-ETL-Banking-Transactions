@@ -1,7 +1,7 @@
 services:
   pyspark:
     hostname: pyspark
-    container_name: pyspark_container
+    container_name: pyspark_container2
     build: 
        context: .
        dockerfile: Dockerfile
