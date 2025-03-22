@@ -28,6 +28,11 @@ Before you begin, ensure you have met the following requirements:
 ## Setup Instructions
 
 1. Clone the repository to your local machine.
+   ```bash
+   git clone https://github.com/hudiyaresa/PySpark-ETL-Banking-Transactions
+   cd PySpark-ETL-Banking-Transactions
+   ```
+
 2. Navigate to the project directory.
 3. Run the Docker Compose setup.
 
@@ -60,15 +65,18 @@ http://127.0.0.1:8888/lab?token=3fa3b1cf2c67643874054971f23ee59bdee283b373794847
 ## Dataset
 
 ### 1. Source Database (`source_db` container)
-- A PostgreSQL database containing structured marketing campaign data.
+- A PostgreSQL database containing structured [marketing campaign data](https://github.com/hudiyaresa/PySpark-ETL-Banking-Transactions/source/init.sql).
 
 ### 2. CSV File (`/script/data/new_bank_transaction.csv`)
-- A large dataset containing transactional records.
+- A [large dataset](https://github.com/hudiyaresa/PySpark-ETL-Banking-Transactions/script/data/new_bank_transaction.csv) containing transactional records.
 - Requires transformation before loading into the Data Warehouse.
 
 ### 3. Warehouse Database (`data_warehouse` container)
-- A PostgreSQL database containing structured schema Tables include `customers`, `transactions`, `marketing_campaign_deposit`, `education_status` and `marital status`.
+- A PostgreSQL database containing structured schema [data warehouse](https://github.com/hudiyaresa/PySpark-ETL-Banking-Transactions/warehouse/init.sql) Tables include `customers`, `transactions`, `marketing_campaign_deposit`, `education_status` and `marital status`.
 
+```
+![ERD DWH](docs/ERD_Data_Warehouse_Banking_Transaction.png)
+```
 
 ## Problem Statement
 
@@ -103,11 +111,52 @@ A predefined transformation process ensures smooth data movement from the source
 - Uses `spark.read.csv("data/{filename}", header=True)` for CSV extraction.
 
 ### Transform
-- **Data Cleaning:** Standardizes and formats data.
-- **Data Casting:** Ensures correct data types (e.g., converting currency strings to numeric values).
-- **Date Formatting:** Converts date fields into consistent formats.
-- **Column Renaming:** Aligns column names with warehouse schema.
-- **Data Selection:** Chooses relevant columns for the final dataset.
+The transformation process is handled by multiple PySpark scripts:
+
+#### **1. `casting_data.py`** – **Casting Data Types**
+- Ensures columns have the correct data types.
+- Example transformations:
+  - Converts the `balance` column from string (with currency symbols) to integer.
+  - Converts `transaction_amount` and `account_balance` to double.
+  - Converts `duration_in_year` by dividing `duration` (days) by 365 and rounding the result.
+
+#### **2. `clean_data.py`** – **Data Cleaning**
+- Standardizes and cleans column values.
+- Example transformations:
+  - **Customers Table:** Converts `customer_gender` values:
+    - `M` → `Male`
+    - `F` → `Female`
+    - Any other value → `Other`
+  - Trims whitespace and converts text to lowercase for consistency.
+
+#### **3. `convert_date.py`** – **Date Format Conversion**
+- Ensures dates and times are in a standard format.
+- Example transformations:
+  - Converts `transaction_date` from `d/M/yy` format to `YYYY/MM/DD`.
+  - Transforms `transaction_time` from `HHMMSS` to `HH:MM:SS`.
+  - Corrects `CustomerDOB` (Date of Birth) by assuming:
+    - If the last two digits of the year are greater than 25, it belongs to the 1900s (`19YY`).
+    - Otherwise, it belongs to the 2000s (`20YY`).
+
+#### **4. `rename_columns.py`** – **Renaming Columns**
+- Standardizes column names across different data sources.
+- Example mappings:
+  - **Customers Table:**
+    - `CustomerID` → `customer_id`
+    - `CustomerDOB` → `birth_date`
+    - `CustGender` → `gender`
+  - **Transactions Table:**
+    - `TransactionID` → `transaction_id`
+    - `TransactionDate` → `transaction_date`
+  - **Marketing Campaign Table:**
+    - `pdays` → `days_since_last_campaign`
+    - `previous` → `previous_campaign_contacts`
+
+#### **5. `select_columns.py`** – **Selecting Relevant Columns**
+- Ensures only necessary columns are included in the final dataset.
+- Example selections:
+  - **Customers Table:** Includes `customer_id`, `birth_date`, `gender`, `location`, `account_balance`.
+  - **Transactions Table:** Includes `transaction_id`, `customer_id`, `transaction_date`, `transaction_time`, `transaction_amount`.
 
 ### Load
 - Inserts transformed data into the PostgreSQL Data Warehouse.
