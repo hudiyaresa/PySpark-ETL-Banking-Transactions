@@ -74,9 +74,8 @@ http://127.0.0.1:8888/lab?token=3fa3b1cf2c67643874054971f23ee59bdee283b373794847
 ### 3. Warehouse Database (`data_warehouse` container)
 - A PostgreSQL database containing structured schema [data warehouse](https://github.com/hudiyaresa/PySpark-ETL-Banking-Transactions/warehouse/init.sql) Tables include `customers`, `transactions`, `marketing_campaign_deposit`, `education_status` and `marital status`.
 
-```
 ![ERD DWH](docs/ERD_Data_Warehouse_Banking_Transaction.png)
-```
+
 
 ## Problem Statement
 
@@ -95,9 +94,8 @@ http://127.0.0.1:8888/lab?token=3fa3b1cf2c67643874054971f23ee59bdee283b373794847
 
 A structured ETL pipeline is implemented with the following steps:
 
-```
 ![ELT Pipeline](docs/ETL_Pipeline_Flow_Diagram.png)
-```
+
 
 ### Source to Target Mapping
 
