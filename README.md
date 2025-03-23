@@ -4,6 +4,15 @@
 
 This project demonstrates the implementation of a scalable data pipeline using Docker and PySpark. It integrates data from multiple sources, including a PostgreSQL transactional database and CSV files, and loads the processed data into a PostgreSQL data warehouse.
 
+### **Tech Stack**  
+The project is built using the following technologies and tools:  
+
+- **PySpark** – For handling large-scale data processing.  
+- **PostgreSQL** – Source transactional database and target data warehouse.  
+- **Docker & Docker Compose** – For containerized environment management.  
+- **Jupyter Notebook** – For data exploration and validation.  
+- **Logging** – To track pipeline execution and errors using python.
+
 ## Table of Contents
 
 1. [Project Overview](#project-overview)
