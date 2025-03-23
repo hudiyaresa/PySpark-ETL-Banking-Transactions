@@ -182,14 +182,14 @@ A predefined transformation process ensures smooth data movement from the source
 ### Transform
 The transformation process is handled by multiple PySpark scripts:
 
-#### **1. `[casting_data.py](script/transform/process/casting_data.py)`** – **Casting Data Types**
+#### **1. [casting_data.py](script/transform/process/casting_data.py)** – **Casting Data Types**
 - Ensures columns have the correct data types.
 - Example transformations:
   - Converts the `balance` column from string (with currency symbols) to integer.
   - Converts `transaction_amount` and `account_balance` to double.
   - Converts `duration_in_year` by dividing `duration` (days) by 365 and rounding the result.
 
-#### **2. `[clean_data.py](script/transform/process/clean_data.py)`** – **Data Cleaning**
+#### **2. [clean_data.py](script/transform/process/clean_data.py)** – **Data Cleaning**
 - Standardizes and cleans column values.
 - Example transformations:
   - **Customers Table:** Converts `customer_gender` values:
@@ -198,7 +198,7 @@ The transformation process is handled by multiple PySpark scripts:
     - Any other value → `Other`
   - Trims whitespace and converts text to lowercase for consistency.
 
-#### **3. `[convert_date.py](script/transform/process/convert_date.py)`** – **Date Format Conversion**
+#### **3. [convert_date.py](script/transform/process/convert_date.py)** – **Date Format Conversion**
 - Ensures dates and times are in a standard format.
 - Example transformations:
   - Converts `transaction_date` from `d/M/yy` format to `YYYY/MM/DD`.
@@ -207,7 +207,7 @@ The transformation process is handled by multiple PySpark scripts:
     - If the last two digits of the year are greater than 25, it belongs to the 1900s (`19YY`).
     - Otherwise, it belongs to the 2000s (`20YY`).
 
-#### **4. `[rename_columns.py](script/transform/process/rename_columns.py)`** – **Renaming Columns**
+#### **4. [rename_columns.py](script/transform/process/rename_columns.py)** – **Renaming Columns**
 - Standardizes column names across different data sources.
 - Example mappings:
   - **Customers Table:**
@@ -221,7 +221,7 @@ The transformation process is handled by multiple PySpark scripts:
     - `pdays` → `days_since_last_campaign`
     - `previous` → `previous_campaign_contacts`
 
-#### **5. `[select_columns.py](script/transform/process/select_columns.py)`** – **Selecting Relevant Columns**
+#### **5. [select_columns.py](script/transform/process/select_columns.py)** – **Selecting Relevant Columns**
 - Ensures only necessary columns are included in the final dataset.
 - Example selections:
   - **Customers Table:** Includes `customer_id`, `birth_date`, `gender`, `location`, `account_balance`.
